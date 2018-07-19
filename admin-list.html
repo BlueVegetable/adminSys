@@ -95,6 +95,7 @@
              function delAll () {
                 layer.confirm('确认要删除吗？',function(index){
                     //捉到所有被选中的，发异步进行删除
+                    alert(1);
                     layer.msg('删除成功', {icon: 1});
                 });
              }
@@ -167,7 +168,7 @@
                         '<td>'+admins[i].password+'</td>'+
                         '<td>'+admins[i].cityId+'</td>'+
                         '<td>'+
-                    '<a href="#" class="layui-btn layui-btn-normal layui-btn-mini">修改</a>'+
+                    '<button class="layui-btn layui-btn-normal layui-btn-mini" onclick="admin_add(\'修改用户\',\'admin-edit.html?adminId='+admins[i].id+'\',\'600\',\'500\')">修改</button>'+
                     '<a href="#" class="layui-btn layui-btn-danger layui-btn-mini" >删除</a>'+
                         '</td>'+
                     '</tr>'

@@ -1,33 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="utf-8">
+  <title>layPage快速使用</title>
+  <link rel="stylesheet" href="/static/build/layui.css" media="all">
 </head>
 <body>
-<div class="layui-tab">
-  <ul class="layui-tab-title">
-    <li class="layui-this">网站设置</li>
-    <li>用户管理</li>
-    <li>权限分配</li>
-    <li>商品管理</li>
-    <li>订单管理</li>
-  </ul>
-  <div class="layui-tab-content">
-    <div class="layui-tab-item layui-show">内容1</div>
-    <div class="layui-tab-item">内容2</div>
-    <div class="layui-tab-item">内容3</div>
-    <div class="layui-tab-item">内容4</div>
-    <div class="layui-tab-item">内容5</div>
-  </div>
-</div>
  
+<div id="test1"></div>
+ 
+<script src="/static/build/layui.js"></script>
 <script>
-//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
-layui.use('element', function(){
-  var element = layui.element();
+layui.use('laypage', function(){
+  var laypage = layui.laypage;
   
-  //…
+  //执行一个laypage实例
+  //开启location.hash的记录
+  laypage.render({
+  elem: 'test1'
+  ,count: 70 //数据总数，从服务端得到
+  ,jump: function(obj, first){
+    //obj包含了当前分页的所有参数，比如：
+    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+    console.log(obj.limit); //得到每页显示的条数
+    
+    //首次不执行
+    if(!first){
+      //do something
+    }
+  }
 });
 </script>
 </body>

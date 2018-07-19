@@ -13,58 +13,35 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="format-detection" content="telephone=no">
         <link rel="stylesheet" href="./css/x-admin.css" media="all">
+        <script src="js/url.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            window.onload=function(){
+                var form=document.getElementById("myform");
+                var id=getParam();
+                form.action=remoteURL+"/Admin/updateById";
+                form.innerHTML+="<input type='hidden' name='id' value='"+id+"' >";
+            }
+            function getParam(){
+                C1=window.location.href.split("?")[1]; //得到id=楼主
+                C2=C1.split("=")[1]; //得到楼主
+                return C2;
+            }
+        </script>
     </head>
     
     <body>
         <div class="x-body">
-            <form class="layui-form">
+            <form class="layui-form" id="myform" method="post" >
                 <div class="layui-form-item">
                     <label for="username" class="layui-form-label">
                         <span class="x-red">*</span>登录名
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="username" name="username" required="" lay-verify="required" value="admin" 
+                        <input type="text" id="username" name="account" required="" lay-verify="required" value="admin" 
                         autocomplete="off" class="layui-input">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
                         <span class="x-red">*</span>将会成为您唯一的登入名
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="phone" class="layui-form-label">
-                        <span class="x-red">*</span>手机
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="phone" value="18925139194" name="phone" required="" lay-verify="phone"
-                        autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid layui-word-aux">
-                        <span class="x-red">*</span>将会成为您唯一的登入名
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="L_email" class="layui-form-label">
-                        <span class="x-red">*</span>邮箱
-                    </label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="L_email" name="email" required="" lay-verify="email" value="113664000@qq.com" 
-                        autocomplete="off" class="layui-input">
-                    </div>
-                    <div class="layui-form-mid layui-word-aux">
-                        <span class="x-red">*</span>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label for="role" class="layui-form-label">
-                        <span class="x-red">*</span>角色
-                    </label>
-                    <div class="layui-input-inline">
-                      <select name="role">
-                        <option value="">请选择角色</option>
-                        <option value="超级管理员" selected="">超级管理员</option>
-                        <option value="编辑人员">编辑人员</option>
-                        <option value="问题维护">问题维护</option>
-                      </select>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -72,7 +49,7 @@
                         <span class="x-red">*</span>密码
                     </label>
                     <div class="layui-input-inline">
-                        <input type="password" id="L_pass" name="pass" required="" lay-verify="pass"
+                        <input type="password" id="L_pass" name="password" required="" lay-verify="pass"
                         autocomplete="off" class="layui-input" value="123456">
                     </div>
                     <div class="layui-form-mid layui-word-aux">
@@ -84,7 +61,7 @@
                         <span class="x-red">*</span>确认密码
                     </label>
                     <div class="layui-input-inline">
-                        <input type="password" id="L_repass" name="repass" required="" lay-verify="repass" value="123456" 
+                        <input type="password" id="L_repass" name="repassword" required="" lay-verify="repass" value="123456" 
                         autocomplete="off" class="layui-input">
                     </div>
                 </div>
@@ -125,12 +102,22 @@
               //监听提交
               form.on('submit(save)', function(data){
                 console.log(data);
-                //发异步，把数据提交给php
-                layer.alert("保存成功", {icon: 6},function () {
-                    // 获得frame索引
-                    var index = parent.layer.getFrameIndex(window.name);
-                    //关闭当前frame
-                    parent.layer.close(index);
+                $.post(document.getElementById("myform").action,data.field,function(res){
+                    if(res==1){
+                        layer.alert("保存成功", {icon: 6},function () {
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("保存失败", {icon: 6},function () {
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                        });
+                    }
                 });
                 return false;
               });
