@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>upload1</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input id="file" type="file" name="file"/>
+    <input type="text" name="cityId" value="54" />
+    <button id="upload" type="button" onclick="up()">上传</button>
+</form>
+<script>
+    // var formData = new FormData($('#uploadForm')[0]);
+    function up(){
+        var formData = new FormData($('#uploadForm')[0]);
+
+        $.ajax({
+            url: "http://111.230.97.64:8080/Banner/addBanner",
+            type: 'POST',
+            cache: false,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success:function(res){
+                alert(JSON.stringify(res));
+            },
+            error:function(res) {
+                alert(JSON.stringify(res));
+            }
+        });
+    }
+    //"http://111.230.97.64:8080/Banner/addBanner"
+</script>
+</body>
+</html>

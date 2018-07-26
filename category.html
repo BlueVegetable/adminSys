@@ -12,6 +12,25 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="format-detection" content="telephone=no">
         <link rel="stylesheet" href="./css/x-admin.css" media="all">
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="js/url.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.ajax({
+                    type: "POST",
+                    url:  remoteURL+"/BigType/selectById",
+                    data: {},
+                    dataType: "json",
+                    success: function(data){
+                    alert(data);
+                    }
+                });
+            })
+            function showData(){
+                
+            }
+        </script>
     </head>
     <body>
         <div class="x-nav">
@@ -26,32 +45,18 @@
          <table class="layui-table">
                 <thead>
                     <tr>
-                       
-                        <th>
-                            ID
-                        </th>
-                      
-                        <th>
-                            分类名
-                        </th>
-                        <th>
-                            操作
-                        </th>
+                        <th>ID</th>
+                        <th>分类名</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody id="x-link">
                     <tr>
+                        <td>1</td>
+                        <td>鸭</td>
                         <td>
-                            1
-                        </td>
-                      
-                        <td>
-                     鸭
-                        </td>
-                        <td >
-                    <a href="#"  class="layui-btn layui-btn-normal layui-btn-mini">修改</a>
-                    <a href="#"  class="layui-btn layui-btn-danger layui-btn-mini" >删除</a>
-                           
+                    <button class="layui-btn layui-btn-normal layui-btn-mini" onclick="category_edit('修改','category-edit.html?id=1','300','300')">修改</button>
+                    <a href="http://111.230.97.64:8080/BigType/deleteById?id=1"  class="layui-btn layui-btn-danger layui-btn-mini">删除</a>
                         </td>
                     </tr>
                 </tbody>
@@ -92,6 +97,9 @@
                 });
             }
             function category_add(title,url,w,h){
+                x_admin_show(title,url,w,h);
+            }
+            function category_edit(title,url,w,h){
                 x_admin_show(title,url,w,h);
             }
             </script>

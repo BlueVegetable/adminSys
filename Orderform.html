@@ -13,40 +13,98 @@
         <meta name="format-detection" content="telephone=no">
         <link rel="stylesheet" href="./css/x-admin.css" media="all">
         <script src="js/url.js" type="text/javascript"></script>
+
+
+        <script type="text/javascript">
+            window.onload=function(){
+                document.getElementById("myform").action=remoteURL+"/OrderForm/selectAll";
+                selectOrders();
+            }
+          //ajax的函数集合
+          function selectOrders(){
+            var xmlHttp=getXMLHttp();
+            var url=remoteURL+"/OrderForm/selectAll";
+            xmlHttp.onreadystatechange=function() {
+              if(xmlHttp.readyState==4 && xmlHttp.status==200) {
+                var orders=eval("("+xmlHttp.responseText+")");
+                var elem=document.getElementById("mytbody");
+                elem.innerHTML="";
+                for (var i = 0; i < orders.length; i++) {
+                  elem.innerHTML+=
+                    '<tr>'+
+                        '<td>'+orders[i].id+'</td>'+
+                        '<td>'+orders[i].userId+'</td>'+
+                        '<td>'+orders[i].createTime+'</td>'+
+                        '<td>'+orders[i].addressId+'</td>'+
+                        '<td>'+orders[i].sum+'</td>'+
+                        '<td>'+orders[i].note+'</td>'+
+                        '<td>'+'暂无详情'+'</td>'+
+                        '<td>'+getStatus(orders[i].state)+'</td>'+
+                        '<td>√</td>'+
+                    '</tr>'
+                }
+              }//状态（“退货”、“1待支付”、“2待发货”、“3待收货”、“4完结”、“5失效”）
+              function getStatus(status){
+                switch(status){
+                    case 1:return "待支付";
+                    case 2:return "待发货";
+                    case 3:return "待收货";
+                    case 4:return "完结";
+                    case 5:return "失效";
+                    default:return "退货";
+                }
+              }
+            }
+            xmlHttp.open("POST",url,true);
+            //false表示是否要异步
+            xmlHttp.send(null);
+          }
+        </script>
     </head>
     <body>
         <div class="x-nav">
             <span class="layui-breadcrumb">
-              <a><cite>首页</cite></a>
-              <a><cite>订单管理</cite></a>
-              <a><cite>订单列表</cite></a>
+                <a><cite>首页</cite></a>
+                <a><cite>订单管理</cite></a>
+                <a><cite>订单列表</cite></a>
             </span>
             <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"  href="javascript:location.replace(location.href);" title="刷新"><i class="layui-icon" style="line-height:30px">ဂ</i></a>
         </div>
         <div class="x-body">
-<form class="layui-form" action="" method="post">
+            <form class="layui-form" action="" method="post" id="myform">
 				<input type="hidden" id="apyear" value="${appay_year}">
 				<input type="hidden" id="tit" value="${title}">
-<label class="layui-form-label">订单号：</label>	
-<div class="layui-input-inline">
- <input type="text" class="layui-input" placeholder="请输入订单号" autocomplete="off" name="title" >
-     </div>
-         <div class="layui-inline">
-      <label class="layui-form-label">用户名：</label>
-      <div class="layui-input-inline">
-<input type="text" class="layui-input" placeholder="请输入用户名" autocomplete="off" name="title" >
-      </div>
-    </div>
-    <div class="layui-inline">
-						<button class="layui-btn layui-btn-normal layui-btn-small" layui-submit>
-							<i class="layui-icon">&#xe615;</i> 查询
-						</button>
-						<button class="layui-btn layui-btn-normal layui-btn-small" type="reset">
-							<i class="layui-icon">&#x1002;</i>重置条件
-						</button>
-						
-					</div>
-	</form>
+                <label class="layui-form-label">订单ID：</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" placeholder="请输入订单编号" autocomplete="off" name="title" >
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户：</label>
+                    <div class="layui-input-block">
+                        <select name="interest" lay-filter="aihao">
+                            <option value="0">写作</option>
+                            <option value="1">阅读</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">城市：</label>
+                    <div class="layui-input-block">
+                        <select name="interest" lay-filter="aihao">
+                            <option value="0">写作</option>
+                            <option value="1">阅读</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <button class="layui-btn layui-btn-normal layui-btn-small" lay-filter="select" layui-submit="">
+					    <i class="layui-icon">&#xe615;</i> 查询
+					</button>
+                    <button class="layui-btn layui-btn-normal layui-btn-small" type="reset">
+                        <i class="layui-icon">&#x1002;</i>重置条件
+                    </button>
+                </div>
+            </form>
             <table class="layui-table">  
                 <thead>
                     <tr>
@@ -65,14 +123,16 @@
                     
                 </tbody>
             </table>
-<center>
-            <div id="page"></div>
+            <center>
+                <div id="page"></div>
             </center>
         </div>
         <script src="./lib/layui/layui.js" charset="utf-8"></script>
         <script src="./js/x-layui.js" charset="utf-8"></script>
         <script>
-            layui.use(['laydate','element','laypage','layer'], function(){
+            layui.use(['laydate','element','laypage','layer','form'], function(){
+                form.render();
+
                 $ = layui.jquery;//jquery
               laydate = layui.laydate;//日期插件
               lement = layui.element();//面包导航
@@ -180,50 +240,6 @@
           var s = document.getElementsByTagName("script")[0]; 
           s.parentNode.insertBefore(hm, s);
         })();
-        </script>
-        <script type="text/javascript">
-            window.onload=function(){
-                selectOrders();
-            }
-          //ajax的函数集合
-          function selectOrders(){
-            var xmlHttp=getXMLHttp();
-            var url=remoteURL+"/OrderForm/selectAll";
-            xmlHttp.onreadystatechange=function() {
-              if(xmlHttp.readyState==4 && xmlHttp.status==200) {
-                var orders=eval("("+xmlHttp.responseText+")");
-                var elem=document.getElementById("mytbody");
-                elem.innerHTML="";
-                for (var i = 0; i < orders.length; i++) {
-                  elem.innerHTML+=
-                    '<tr>'+
-                        '<td>'+orders[i].id+'</td>'+
-                        '<td>'+orders[i].userId+'</td>'+
-                        '<td>'+orders[i].createTime+'</td>'+
-                        '<td>'+orders[i].addressId+'</td>'+
-                        '<td>'+orders[i].sum+'</td>'+
-                        '<td>'+orders[i].note+'</td>'+
-                        '<td>'+'暂无详情'+'</td>'+
-                        '<td>'+getStatus(orders[i].state)+'</td>'+
-                        '<td>√</td>'+
-                    '</tr>'
-                }
-              }//状态（“退货”、“1待支付”、“2待发货”、“3待收货”、“4完结”、“5失效”）
-              function getStatus(status){
-                switch(status){
-                    case 1:return "待支付";
-                    case 2:return "待发货";
-                    case 3:return "待收货";
-                    case 4:return "完结";
-                    case 5:return "失效";
-                    default:return "退货";
-                }
-              }
-            }
-            xmlHttp.open("POST",url,true);
-            //false表示是否要异步
-            xmlHttp.send(null);
-          }
         </script>
     </body>
 </html>

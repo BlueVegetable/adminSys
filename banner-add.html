@@ -1,11 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
     
     <head>
         <meta charset="utf-8">
         <title>
-               易动科技  V1.0
+            X-admin v1.0
         </title>
         <meta name="renderer" content="webkit">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -13,22 +12,12 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="format-detection" content="telephone=no">
-        <meta content="text/html;charset=UTF-8" http-equiv="content-type">
         <link rel="stylesheet" href="./css/x-admin.css" media="all">
-
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-        <script src="js/url.js" type="text/javascript"></script>
-        <script type="text/javascript">
-            window.onload=function(){
-                var url=remoteURL+"/Banner/addBanner";
-                document.getElementById("myform").action=url;
-            }
-        </script>
     </head>
     
     <body>
         <div class="x-body">
-            <form class="layui-form" id="myform" enctype="multipart/form-data" >
+            <form class="layui-form">
                 <div class="layui-form-item">
                     <label for="link" class="layui-form-label">
                         <span class="x-red">*</span>轮播图
@@ -39,7 +28,38 @@
                       </div>
                     </div>
                 </div>
-                <input type="hidden" name="cityId" value="1" >
+                <div class="layui-form-item">
+                    <label  class="layui-form-label">缩略图
+                    </label>
+                    <img id="LAY_demo_upload" width="400" src="">
+                </div>
+                <div class="layui-form-item">
+                    <label  class="layui-form-label">
+                    </label>
+                    （由于服务器资源有限，所以此处每次给你返回的是同一张图片)
+                </div>
+                
+                <div class="layui-form-item">
+                    <label for="link" class="layui-form-label">
+                        <span class="x-red">*</span>链接
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="link" name="link" required="" lay-verify="required"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="desc" class="layui-form-label">
+                        <span class="x-red">*</span>描述
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="desc" name="desc" required="" lay-verify="required"
+                        autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        <span class="x-red">*</span>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <label for="L_repass" class="layui-form-label">
                     </label>
@@ -58,19 +78,20 @@
                 $ = layui.jquery;
               var form = layui.form()
               ,layer = layui.layer;
+
+
               //图片上传接口
               layui.upload({
-                url: 'http://111.230.97.64:8080/Banner/addBanner' //上传接口
+                url: "http://111.230.97.64:8080/Banner/addBanner" //上传接口
                 ,success: function(res){ //上传成功后的回调
                     console.log(res);
                   $('#LAY_demo_upload').attr('src',res.url);
-                  // alert(JSON.stringify(res));
                 }
               });
+            
 
               //监听提交
               form.on('submit(add)', function(data){
-                alert(alert(JSON.stringify(data)));
                 console.log(data);
                 //发异步，把数据提交给php
                 layer.alert("增加成功", {icon: 6},function () {
@@ -81,7 +102,8 @@
                 });
                 return false;
               });
-
+              
+              
             });
         </script>
         <script>

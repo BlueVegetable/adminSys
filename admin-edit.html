@@ -22,9 +22,12 @@
                 form.innerHTML+="<input type='hidden' name='id' value='"+id+"' >";
             }
             function getParam(){
-                C1=window.location.href.split("?")[1]; //得到id=楼主
-                C2=C1.split("=")[1]; //得到楼主
-                return C2;
+                var C1=window.location.href.split("?")[1]; //得到id=楼主
+                var C2=C1.split("&");
+                $("#username").attr("value",C2[1].split("=")[1]);
+                $("#L_pass").attr("value",C2[2].split("=")[1]);
+                $("#L_repass").attr("value",C2[2].split("=")[1]);
+                return C2[0].split("=")[1];
             }
         </script>
     </head>
