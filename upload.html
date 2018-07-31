@@ -2,56 +2,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>上传文件</title>
+    <title>轮播图上传功能</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <meta http-equiv="Content-Type" content="multipart/form-data;charset=utf-8" />
     <link rel="stylesheet" href="./css/x-admin.css" media="all">
 
-    <script src="./lib/layui/layui.js" charset="utf-8"></script>
-    <script src="./js/x-layui.js" charset="utf-8"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="js/url.js" type="text/javascript"></script>
+    <style>
+        .myButton {
+            position:fixed;
+            text-decoration:none;
+            display:block;
+            background: #009688;
+            width:70px;
+            height:30px;
+            text-align:center;
+            border-radius:3px;
+            line-height:30px;
+            color:white;
+            font-weight:bold;
+        }
+    </style>
     <script>
-        window.onload=function () {
-            $.ajax({
-                url:remoteURL+"/Area/selectAll",
-                dataType:'json',
-                type:'post',
-                success:function(data){
-                    $.each(data,function(index,data){
-                        $('#cityId').append(new Option(data.city,data.id));// 下拉菜单里添加元素
-                    })
-                    renderForm();//下拉菜单渲染 把内容加载进去
-                }
-            });
-        }
-        function renderForm(){
-            layui.use('form', function(){
-                var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
-                form.render();
-            });
-        }
         function up(){
             var formData = new FormData($('#myform')[0]);
-            alert(remoteURL+"/Banner/addBanner");
             $.ajax({
-                url: remoteURL+"/Banner/addBanner",
+                url: remoteURL+"/Banner/uploadPicture",
                 type: 'POST',
                 cache: false,
                 data: formData,
                 processData: false,
                 contentType: false,
                 success:function(res){
-                    alert(1);
-                    if(res==1)
-                        layer.alert("添加成功");
-                    else
-                        layer.alert("添加失败");
+                    document.getElementById("dataForm").innerHTML+="";
+                    document.getElementById("path").value=res;
+                    document.getElementById("img").src="http://"+res;
+                    document.getElementById("imgdiv").style.display="block";
+                    renderForm();
                 },
                 error:function(res) {
                     alert(JSON.stringify(formData));
@@ -59,38 +51,118 @@
                 }
             });
         }
+        window.onload=function(){
+            document.getElementById("myform").action=remoteURL+"/Banner/uploadPicture";//设置登录的网址
+            $.ajax({
+                type: "POST",
+                url:  remoteURL+"/Area/selectAll",
+                data: {},
+                dataType: "json",
+                success: function(data){
+                    $.each(data,function(index,item){
+                        $('#cityId').append(new Option(item.city,item.id));// 下拉菜单里添加元素
+                    })
+                    renderForm();//下拉菜单渲染 把内容加载进去
+                }
+            });
+            renderForm();
+        }
+        function renderForm(){
+            layui.use('form', function(){
+                var form = layui.form();//高版本建议把括号去掉，有的低版本，需要加()
+                form.render();
+            });
+        }
     </script>
 </head>
 <body>
-<div class="x-body">
-    <form class="layui-form" id="myform" enctype="multipart/form-data">
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class="x-red">*</span>轮播图
-            </label>
-            <div class="layui-upload">
-                <input type="file" name="file" id="s_pmt_dw" style="width:190px">
-                <div class="layui-upload-list" id="demo2"></div>
-            </div>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="text-align: left;">
+            <span class="x-red">*</span>轮播图
+        </label>
+        <div class="layui-input-inline" style="text-align: center;">
+            <button onclick="document.getElementById('file').click()" class="myButton" >上传图片</button>
+            <form id="myform" enctype="multipart/form-data" method="post" action="http://111.230.97.64:8080/Banner/uploadPicture">
+                <input type="file" id="file" name="file" style="display:none;" />
+                <script>
+                    var upload = document.getElementById('myform');
+                    upload.addEventListener('change', function() {
+                        up();
+                    }, false);
+                </script>
+            </form>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-                <span class="x-red">*</span>地址
-            </label>
-            <div class="layui-input-inline">
-                <select name="cityId" id="cityId">
-                    <option value="">请选择地址</option>
-                </select>
-            </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="text-align: left;">
+            <span class="x-red">*</span>预览
+        </label>
+        <div id="imgdiv" class="layui-input-inline" style="display:none">
+            <img id="img" src="" style="width:100px;height:100px;" />
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">
-            </label>
-            <button  class="layui-btn" onclick="up()">
-                增加
-            </button>
+    </div>
+
+    <form class="layui-form-item" id="dataForm" >
+        <label class="layui-form-label" style="text-align: left;">
+            <span class="x-red">*</span>请选择城市
+        </label>
+        <div class="layui-input-inline">
+            <select name="cityId" id="cityId">
+                <option value="">请选择地址</option>
+            </select>
         </div>
     </form>
+
+    <input type="hidden" id="path" name="path" value="pbvxr9z7k.bkt.clouddn.com/755931b0a44e4f26b53307386d2efc6b" />
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+        </label>
+        <button  class="layui-btn" lay-filter="add" lay-submit="">
+            增加
+        </button>
+    </div>
+
+    <script src="./lib/layui/layui.js" charset="utf-8">
+    </script>
+    <script src="./js/x-layui.js" charset="utf-8">
+    </script>
+    <script>
+        layui.use(['form','layer'], function(){
+            $ = layui.jquery;
+            var form = layui.form()
+                ,layer = layui.layer;
+
+            //监听提交
+            form.on('submit(add)', function(data){
+                console.log(data);
+                //发异步，把数据提交给php
+                $.post(remoteURL+"/Banner/addBanner",data.field,function(res){
+                    if(res==1) {
+                        layer.alert("添加成功", {icon: 6},function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.alert("添加失败", {icon: 6},function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    }
+                });
+                return false;
+            });
+
+        });
+    </script>
+
 </div>
 </body>
 </html>
